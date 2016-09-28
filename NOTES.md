@@ -122,5 +122,17 @@ cargar el código y los datos. Una vez que sepamos que todo funciona como es
 debido, podemos escalar la instancia a una con mucho más CPU y/o GPU, entrenar
 el algoritmo, hacerle el "pickle" y quedarnos con el archivo.
 
-### Video 8 - Regression, how it works (https://youtu.be/V59bYfIomVk)
+
+### Video 7 - Regression, how it works (https://youtu.be/V59bYfIomVk)
+
+Building Linear Regression:
+y = mx + b
+
+m = (x.y - xy) / ( (x)^2 - x^2 )  [all bars]
+b = y - mx 
+
+
+### Video 8 - How to program the Best Fit Slope (https://youtu.be/SvmueyhSkgQ)
+
+Aquí hacemos el cómputo de la pendiente a mano...
 
