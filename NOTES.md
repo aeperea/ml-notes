@@ -62,4 +62,33 @@ para repartir la tarea (si el input es -1, usa el máximo posible por el CPU)
 `clf = LinearRegression(n_jobs=-1)`
 
 
-### Video 5 - Regression forecasting and predicting (https://youtu.be/QLVMqwpOLPk)
+### Video 5 - Regression forecasting and predicting
+(https://youtu.be/QLVMqwpOLPk)
+En este video armamos un set de valores del dataframe con:
+```
+X = X[:-forecast_out]
+X_lately = X[-forecast_out:]
+```
+para predecir los últimos 30 valores del dataset, esto es posible usando la
+función `predict` de sclearn:
+
+`forecast_set = clf.predict(X_lately)`
+
+Después de eso le hacemos un tratamiento al dataframe donde agregamos la columna
+de 'Forecast' y le asignamos fechas a todos los datos del forecast.
+
+Al final armamos una plot usando matplotlib:
+
+```
+df['Adj. Close'].plot()
+df['Forecast'].plot()
+plt.legend(loc=4)
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.show();
+```
+
+
+### Video 6 - Pickling and Scaling (https://youtu.be/za5s7RB_VLw)
+
+Pickling - save your classifier and loading in no time!

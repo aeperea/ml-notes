@@ -1,13 +1,16 @@
 # we'll do regression with stock prices
-
 import pandas as pd
-import quandl, math
+import quandl, math, datetime
 import numpy as np
 from sklearn import preprocessing, cross_validation, svm
 # preoprocessing to scale our data (-1 .. 1)
 # cross_validation to create our training and testing samples (shuffles data to no have bias)
 # support vector machine (to do regression)
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
 
 df = quandl.get('WIKI/GOOGL')
 
@@ -37,20 +40,15 @@ df.fillna(-99999, inplace=True)
 forecast_out = int(math.ceil(0.01 * len(df)))
 print(forecast_out)
 
-# le aplicamos un shift a la columna a medir (en este caso Adj. Close) para
-# variarla por 10 días al futuro
-df['label'] = df[forecast_col].shift(-forecast_out)
+df['label'] = df[forecast_col].shift(-forecast_out) # shift, días al futuro
+X = np.array(df.drop(['label'], 1))                 # definimos x y y
+X = preprocessing.scale(X)                          # we scale X before feeding to classifier scale along the old values
+X = X[:-forecast_out]
+X_lately = X[-forecast_out:]                        # we don't have a Y value on these:
 
-# elimina los NaN
-df.dropna(inplace=True)
 
-# definimos x y y
-X = np.array(df.drop(['label'], 1))
+df.dropna(inplace=True);
 y = np.array(df['label'])
-
-# we scale X before feeding to classifier
-# scale along the old values
-X = preprocessing.scale(X)
 y = np.array(df['label'])
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2) # 20% of the data
@@ -58,13 +56,30 @@ X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train) # train
 accuracy = clf.score(X_test, y_test) # to test squared error 
+# print(accuracy)
 
-print(accuracy)
 
-# Let's use SVM instead of LinearReg (in this case it's less accurate)
-clf = svm.SVR()
-clf.fit(X_train, y_train) 
-accuracy = clf.score(X_test, y_test) # squared error
+# we need to predict based on the X data (single_value or array of values to predict)
+forecast_set = clf.predict(X_lately)
 
-print(accuracy)
+print(forecast_set, accuracy, forecast_out)
 
+# agregamos la columna de forecast y le damos la fecha de los siguiente días para podedr hacer el plot bien
+df['Forecast'] = np.nan # entire column as NaN
+last_date      = df.iloc[-1].name # last record
+last_unix      = last_date.timestamp()
+one_day        = 86400
+next_unix      = last_unix + one_day
+
+for i in forecast_set:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    next_unix += one_day
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns) - 1)] + [i] # .loc references the index
+
+
+df['Adj. Close'].plot()
+df['Forecast'].plot()
+plt.legend(loc=4)
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.show();
