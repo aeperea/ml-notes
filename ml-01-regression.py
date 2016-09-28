@@ -9,6 +9,7 @@ from sklearn import preprocessing, cross_validation, svm
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle # like a file that saves the classifier
 
 style.use('ggplot')
 
@@ -49,12 +50,21 @@ X_lately = X[-forecast_out:]                        # we don't have a Y value on
 
 df.dropna(inplace=True);
 y = np.array(df['label'])
-y = np.array(df['label'])
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2) # 20% of the data
 
-clf = LinearRegression(n_jobs=-1)
-clf.fit(X_train, y_train) # train
+# clf = LinearRegression(n_jobs=-1)
+# clf.fit(X_train, y_train) # train
+
+# # we want to save the classifier to not retrain it, so we need to use pickle
+# # we don't want to retrain it everytime
+# with open('linearregression.pickle','wb') as f:
+#     pickle.dump(clf, f) # dumps the classifier
+
+#to use the saved classifer (read) 
+pickle_in = open('linearregression.pickle', 'rb')
+clf = pickle.load(pickle_in)
+
 accuracy = clf.score(X_test, y_test) # to test squared error 
 # print(accuracy)
 

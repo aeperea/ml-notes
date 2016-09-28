@@ -92,3 +92,35 @@ plt.show();
 ### Video 6 - Pickling and Scaling (https://youtu.be/za5s7RB_VLw)
 
 Pickling - save your classifier and loading in no time!
+Serialización de un objeto de python...
+
+Para poder guardar los classifiers necesitamos agregar pickle justo después de
+entrenarlo (haciendo el fit).
+```
+clf = LinearRegression(n_jobs=-1)
+clf.fit(X_train, y_train)
+```
+
+El classifier puede ser guardado como archivo 'linearregression.picke' con la
+siguiente instrucción de pickle:
+```
+with open('linearregression.pickle','wb') as f:
+    pickle.dump(clf, f)
+```
+
+Y para usarlo:
+```
+pickle_in = open('linearregression.pickle', 'rb')
+clf = pickle.load(pickle_in)
+```
+
+Y es todo.
+
+Cuando nuestra computadora no tiene el nivel para poder entrenar el algoritmo
+rápidamente podemos levantar una instancia súper barata en DO, lineode, AWS,
+cargar el código y los datos. Una vez que sepamos que todo funciona como es
+debido, podemos escalar la instancia a una con mucho más CPU y/o GPU, entrenar
+el algoritmo, hacerle el "pickle" y quedarnos con el archivo.
+
+### Video 8 - Regression, how it works (https://youtu.be/V59bYfIomVk)
+
