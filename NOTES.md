@@ -136,3 +136,25 @@ b = y - mx
 
 Aquí hacemos el cómputo de la pendiente a mano...
 
+
+### Video 9 - How to program the Best Fit Line (https://youtu.be/KLGfMGsgP34)
+
+Ahora hacemos la línea para hacer predicciones ya teniendo m y b
+
+Para tener la línea podemos usar lo siguiente:
+
+one liner:
+`regression_line = [(m*x) + b for x in xs]`
+
+que es lo mismo a escribir
+```
+for x in xs:
+    regression_line.append((m*x) + b)
+```
+
+o usar la manera vectorial:
+
+`regression_line = m*xs + b`
+
+
+### Video 10 - R Squared Theory (https://youtu.be/-fgYp74SNtk)
